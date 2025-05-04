@@ -156,3 +156,7 @@ a {
     padding-right: 16px !important;
   }
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

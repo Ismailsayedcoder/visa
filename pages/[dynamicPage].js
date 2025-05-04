@@ -16,19 +16,23 @@ export default function DynamicPage() {
   );
 }
 
-// Add this function to generate the static paths
+// Add getStaticPaths to define valid paths
 export async function getStaticPaths() {
   return {
-    paths: [], // Define your paths here
-    fallback: 'blocking' // or false or true depending on your needs
-  }
+    paths: [
+      // Define your dynamic routes here
+      { params: { dynamicPage: 'about' } },
+      { params: { dynamicPage: 'contact' } }
+    ],
+    fallback: false // or 'blocking' if you want to generate pages on demand
+  };
 }
 
-// Add this function to fetch the data for each path
 export async function getStaticProps({ params }) {
   return {
     props: {
       // Your page props here
+      page: params.dynamicPage
     }
-  }
+  };
 }
