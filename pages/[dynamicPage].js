@@ -1,15 +1,18 @@
 import { useRouter } from 'next/router';
 import { Box, Container, Typography } from '@mui/material';
 
-export default function DynamicPage() {
+export default function DynamicPage({ page }) {
   const router = useRouter();
-  const { dynamicPage } = router.query;
+
+  if (router.isFallback) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Box sx={{ minHeight: '100vh', py: 4 }}>
       <Container>
         <Typography variant="h4" component="h1" gutterBottom>
-          {dynamicPage}
+          {page}
         </Typography>
       </Container>
     </Box>
