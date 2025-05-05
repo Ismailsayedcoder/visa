@@ -20,6 +20,7 @@ import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import HotelIcon from '@mui/icons-material/Hotel';
 import ExploreIcon from '@mui/icons-material/Explore';
 import Image from 'next/image';
+import { destinations } from '../data/destinations';
 
 const features = [
   {
@@ -42,32 +43,8 @@ const features = [
   }
 ];
 
-const destinations = [
-  {
-    title: "دبي",
-    shortTitle: "دبي",
-    description: "اكتشف روعة المدينة العصرية وناطحات السحاب المذهلة",
-    image: "/images/dubai.jpg",
-    heroImage: "/images/dubai-hero.jpg",
-    highlights: ["برج خليفة", "دبي مول", "جزيرة النخلة", "المدينة القديمة"]
-  },
-  {
-    title: "تركيا",
-    shortTitle: "تركيا",
-    description: "استمتع بجمال الطبيعة والتاريخ العريق",
-    image: "/images/turkey.jpg",
-    heroImage: "/images/turkey-hero.jpg",
-    highlights: ["آيا صوفيا", "البسفور", "كابادوكيا", "السوق المغطى"]
-  },
-  {
-    title: "ماليزيا",
-    shortTitle: "ماليزيا",
-    description: "اكتشف سحر الطبيعة الاستوائية والثقافة الآسيوية",
-    image: "/images/malaysia.jpg",
-    heroImage: "/images/malaysia-hero.jpg",
-    highlights: ["برجا بتروناس", "جزيرة لنكاوي", "مرتفعات جنتنج", "مدينة ملاكا"]
-  }
-];
+// Remove this duplicate destinations array since we're importing it
+// const destinations = [ ... ];
 
 export default function Home() {
   const router = useRouter();
@@ -89,22 +66,34 @@ export default function Home() {
       </Head>
 
       {/* قسم الترحيب الرئيسي */}
-      <Box sx={{ height: '80vh', position: 'relative' }}>
+      <Box sx={{ 
+        height: '100vh', 
+        position: 'relative', 
+        overflow: 'hidden',
+        width: '100%'
+      }}>
         <Swiper
           modules={[Navigation, Pagination, Autoplay]}
           spaceBetween={0}
           slidesPerView={1}
           navigation
-          pagination={{ clickable: true }}
+          pagination={{ 
+            clickable: true,
+            dynamicBullets: true 
+          }}
           autoplay={{
             delay: 5000,
             disableOnInteraction: false
           }}
           style={{
             height: '100%',
+            width: '100%',
             '--swiper-navigation-color': '#fff',
             '--swiper-pagination-color': '#fff',
-            '--swiper-navigation-size': '44px'
+            '--swiper-navigation-size': '44px',
+            '--swiper-pagination-bullet-size': '12px',
+            '--swiper-pagination-bullet-inactive-color': '#999',
+            '--swiper-pagination-bullet-inactive-opacity': '0.5'
           }}
         >
           {destinations.map((destination, index) => (
@@ -113,8 +102,11 @@ export default function Home() {
                 sx={{
                   position: 'relative',
                   height: '100vh',
+                  width: '100%',
                   display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'center',
+                  overflow: 'hidden',
                   '&::before': {
                     content: '""',
                     position: 'absolute',
@@ -122,18 +114,13 @@ export default function Home() {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    background: 'linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.6))',
-                    zIndex: 1
+                    background: 'linear-gradient(45deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.7) 100%)',
+                    zIndex: 1,
+                    opacity: 0.8,
+                    transition: 'opacity 0.5s ease-in-out'
                   },
-                  '&::after': {
-                    content: '""',
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    height: '30%',
-                    background: 'linear-gradient(to top, rgba(0,0,0,0.7), transparent)',
-                    zIndex: 1
+                  '&:hover::before': {
+                    opacity: 0.6
                   }
                 }}
               >
@@ -143,10 +130,13 @@ export default function Home() {
                   layout="fill"
                   objectFit="cover"
                   priority={index === 0}
-                  quality={85}
+                  quality={100}
                   style={{
+                    width: '100%',
+                    height: '100%',
                     transform: 'scale(1.1)',
-                    transition: 'transform 6s ease-in-out'
+                    transition: 'all 8s ease-in-out',
+                    animation: `zoom${index} 20s infinite alternate`
                   }}
                 />
                 <Container sx={{ position: 'relative', zIndex: 2, color: 'white' }}>
@@ -212,6 +202,21 @@ export default function Home() {
           ))}
         </Swiper>
       </Box>
+
+      <style jsx global>{`
+        @keyframes zoom0 {
+          0% { transform: scale(1.1) }
+          100% { transform: scale(1.2) }
+        }
+        @keyframes zoom1 {
+          0% { transform: scale(1.15) translate(-2%, 0) }
+          100% { transform: scale(1.25) translate(2%, 0) }
+        }
+        @keyframes zoom2 {
+          0% { transform: scale(1.1) translate(0, -2%) }
+          100% { transform: scale(1.2) translate(0, 2%) }
+        }
+      `}</style>
 
       {/* قسم المميزات */}
       <Container sx={{ py: 8 }}>
@@ -349,7 +354,7 @@ export default function Home() {
                   viewport={{ once: true }}
                 >
                   <Card 
-                    onClick={() => handleServiceClick(`/destinations/${destination.shortTitle.toLowerCase()}`)}
+                    onClick={() => router.push(`/destinations/${destination.shortTitle}`)}
                     sx={{ 
                       height: '100%',
                       transition: 'all 0.3s ease',
@@ -401,7 +406,7 @@ export default function Home() {
                         endIcon={<ArrowForwardIcon />}
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleServiceClick(`/destinations/${destination.shortTitle.toLowerCase()}`);
+                          router.push(`/destinations/${destination.shortTitle}`);
                         }}
                         sx={{
                           backgroundColor: 'primary.main',
@@ -436,7 +441,7 @@ export default function Home() {
   variant="contained"
   size="large"
   endIcon={<ArrowForwardIcon />}
-  onClick={() => handleServiceClick(`/destinations/${destination.shortTitle.toLowerCase()}`)}
+  onClick={() => router.push(`/destinations/${destination.shortTitle}`)}
   sx={{
     backgroundColor: 'transparent',
     color: 'white',
