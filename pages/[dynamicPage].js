@@ -24,10 +24,10 @@ export async function getStaticPaths() {
   return {
     paths: [
       // Define your dynamic routes here
-      { params: { dynamicPage: 'about' } },
-      { params: { dynamicPage: 'contact' } }
+      { params: { dynamicPage: 'terms' } },
+      { params: { dynamicPage: 'privacy' } }
     ],
-    fallback: false // or 'blocking' if you want to generate pages on demand
+    fallback: false
   };
 }
 

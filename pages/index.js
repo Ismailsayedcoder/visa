@@ -22,6 +22,7 @@ import ExploreIcon from '@mui/icons-material/Explore';
 import Image from 'next/image';
 import { destinations } from '../data/destinations';
 
+
 const features = [
   {
     title: 'حجز رحلات',
@@ -39,12 +40,9 @@ const features = [
     title: 'برامج سياحية',
     description: 'باقات سياحية متكاملة لوجهات مميزة',
     icon: ExploreIcon,
-    link: '/services/tours' // تصحيح المسار
+    link: '/services/tours'
   }
 ];
-
-// Remove this duplicate destinations array since we're importing it
-// const destinations = [ ... ];
 
 export default function Home() {
   const router = useRouter();
@@ -435,28 +433,3 @@ export default function Home() {
     </Box>
   );
 }
-
-// تحديث أزرار الخدمات
-<Button
-  variant="contained"
-  size="large"
-  endIcon={<ArrowForwardIcon />}
-  onClick={() => router.push(`/destinations/${destination.shortTitle}`)}
-  sx={{
-    backgroundColor: 'transparent',
-    color: 'white',
-    px: 4,
-    py: 1.5,
-    fontSize: '1.2rem',
-    border: '2px solid white',
-    borderRadius: '30px',
-    transition: 'all 0.3s ease',
-    '&:hover': {
-      backgroundColor: 'white',
-      color: 'primary.main',
-      transform: 'scale(1.05)',
-    }
-  }}
->
-  اكتشف المزيد
-</Button>

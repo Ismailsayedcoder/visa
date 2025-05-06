@@ -1,8 +1,13 @@
 /** @type {import('next').NextConfig} */
+const isProd = process.env.NODE_ENV === 'production';
+
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   poweredByHeader: false,
+  output: 'export',
+  basePath: isProd ? '/Travel-' : '',
+  assetPrefix: isProd ? '/Travel-/' : '',
   images: {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
@@ -14,11 +19,15 @@ const nextConfig = {
         hostname: '**',
       },
     ],
+    unoptimized: true,
   },
   transpilePackages: ['@mui/material', '@mui/icons-material', '@mui/x-date-pickers'],
   compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
-    emotion: true
+    removeConsole: isProd,
+    emotion: true,
+  },
+  experimental: {
+    forceSwcTransforms: true,
   },
   webpack: (config, { isServer }) => {
     config.optimization = {
@@ -60,5 +69,3 @@ const nextConfig = {
 };
 
 module.exports = nextConfig;
-
-
